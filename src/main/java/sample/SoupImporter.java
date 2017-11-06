@@ -32,6 +32,8 @@ public class SoupImporter implements BookmarksImporter {
 
         directories.push("default");
 
+        System.out.println("Git Test");
+
 
 /*
         for (Element e : doc.getElementsByTag("DL"))
