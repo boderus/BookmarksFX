@@ -6,32 +6,29 @@ import org.jsoup.nodes.Element;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Stack;
 
-public class Importer {
+public class SoupImporter implements BookmarksImporter {
 
     private Stack<String> directories = new Stack<>();
 //    private String currentDir;
     List<Bookmark> result = new ArrayList<>();
 
     public static void main(String[] args) throws IOException {
-        Importer importer = new Importer();
-        importer.importFromHtml("resources/bookmarks.html");
+        SoupImporter importer = new SoupImporter();
+        importer.importBookmarks(new File("resources/bookmarks.html"));
     }
 
-    public List<Bookmark> importFromHtml(String fileName) throws IOException {
+    @Override
+    public List<Bookmark> importBookmarks(File file) throws IOException {
 
         //String content = new String(Files.readAllBytes(Paths.get(fileName)));
 
-        File f = new File(fileName);
-        System.out.println(f.getAbsolutePath());
+        System.out.println(file.getAbsolutePath());
 
-        Document doc = Jsoup.parse(f, "UTF-8");
+        Document doc = Jsoup.parse(file, "UTF-8");
 
         directories.push("default");
 

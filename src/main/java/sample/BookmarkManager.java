@@ -1,25 +1,20 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +31,7 @@ public class BookmarkManager extends Application {
 
     WebView browser = new WebView();
     final WebEngine webEngine = browser.getEngine();
-    Importer importer = new Importer();
+    BookmarksImporter importer = new SoupImporter();
     String fileName = "resources/bookmarks.html";
 
     List<String> urls = Arrays.asList("http://www.onet.pl", "http://google.pl");
@@ -46,13 +41,13 @@ public class BookmarkManager extends Application {
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws IOException, XMLStreamException {
         primaryStage.setTitle("Tree View Sample");
 
         TreeItem<Bookmark> rootItem = new TreeItem<Bookmark> (new Bookmark("MAIN", "MAIN", "Main"));
         rootItem.setExpanded(true);
 
-        List<Bookmark> all = importer.importFromHtml(fileName);
+        List<Bookmark> all = importer.importBookmarks(new File(fileName));
         Map<String, List<Bookmark>> grouped = all.stream().collect(groupingBy(Bookmark::getDirectory));
 
         grouped.forEach((a, b) -> System.out.println(a));
@@ -63,7 +58,7 @@ public class BookmarkManager extends Application {
             rootItem.getChildren().add(item);
         });
         /*
-        importer.importFromHtml(fileName).forEach(b -> {
+        importer.importBookmarks(fileName).forEach(b -> {
             TreeItem<Bookmark> item = new TreeItem<>(b);
             rootItem.getChildren().add(item);
         });
